@@ -1,7 +1,8 @@
 ﻿#!/bin/bash
 
 # This dumps your databases one by one into mysql_dump_YYYY-MM-DD so it's easy to import to a new server.
-# chmod 755 /root/scripts/mysql-db-dumper.sh
+# wget https://raw.githubusercontent.com/orbisius/server-tools/master/mysql_db_dumper.sh
+# chmod 755 ./mysql_db_dumper.sh
 # Svetoslav (Slavi) Marinov | http://orbisius.com
 
 # Enter your own admin 
