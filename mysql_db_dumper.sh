@@ -1,4 +1,4 @@
-﻿#!/bin/bash
+#!/bin/bash
 
 # This dumps your databases one by one into mysql_dump_YYYY-MM-DD so it's easy to import to a new server.
 # wget https://raw.githubusercontent.com/orbisius/server-tools/master/mysql_db_dumper.sh
