@@ -59,7 +59,7 @@ foreach ( $git_dirs as $git_dir ) {
     $res = `git pull 2>&1`;
 
     // Rm credentials from the git pull output
-    $res = preg_replace( 'https?://.+?\@(bitbucket|github)', '', $res );
+    $res = preg_replace( '#https?://.+?\@(bitbucket|github)#si', '', $res );
     echo $res;
 }
 
