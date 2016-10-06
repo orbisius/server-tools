@@ -20,12 +20,10 @@ $out_dir .= "/";
 
 // If the path or export dir contains something that looks like YYYY-MM-DD it will be automatically
 // replaced with the current date.
-if ( preg_match( '#YYYY\-MM\-DD#si', $out_dir ) ) {
-    // The order is super important!
-	$out_dir = preg_replace( '#\bYYYY\-MM\-DD\b#si', date( 'Y-m-d' ), $out_dir );
-	$out_dir = preg_replace( '#\bYYYY\-MM\b#si', date( 'Y-m' ), $out_dir );
-	$out_dir = preg_replace( '#\bYYYY\b#si', date( 'Y' ), $out_dir );
-}
+// The order is super important!
+$out_dir = preg_replace( '#YYYY\-MM\-DD#si', date( 'Y-m-d' ), $out_dir );
+$out_dir = preg_replace( '#YYYY\-MM#si', date( 'Y-m' ), $out_dir );
+$out_dir = preg_replace( '#YYYY#si', date( 'Y' ), $out_dir );
 
 // This is good if you want to have a weekly backup
 // $0 root pass c:\backups\db_export\YYYY-MM\DAY_OF_WEEK\ ->
