@@ -56,7 +56,11 @@ echo "Dirs: \n" . join ("\n", $git_dirs ) . "\n";
 foreach ( $git_dirs as $git_dir ) {
     echo "Syncing [$git_dir]\n";
     chdir( $git_dir );
-    echo `git pull 2>&1`;
+    $res = `git pull 2>&1`;
+
+    // Rm credentials from the git pull output
+    $res = preg_replace( 'https?://.+?\@(bitbucket|github)', '', $res );
+    echo $res;
 }
 
 if ( php_sapi_name() != 'cli' ) {
