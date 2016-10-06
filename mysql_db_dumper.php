@@ -2,9 +2,9 @@
 
 /*
  * This tool allows you to export all of the databases in separate files and compress them using gzip.
- * php db.php db_root_user db_root_pass output_dir
+ * php mysql_db_dumper.php db_root_user db_root_pass output_dir
  * 
- * php db.php "" "" C:\Copy\Dropbox\cloud\db_export
+ * php mysql_db_dumper.php "" "" C:\Copy\Dropbox\cloud\db_export
  * @author Svetoslav Marinov (Slavi) | orbisius.com
  * @copyright 2016
  */
