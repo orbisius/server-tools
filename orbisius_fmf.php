@@ -26,7 +26,7 @@ ob_implicit_flush(true);
 @ini_set('implicit_flush',1);
 $php_cli = php_sapi_name() == 'cli';
 $browser_job = ! $php_cli;
-
+$prefix = $browser_job ? dirname( $_SERVER['REQUEST_URI']) : '';
 $nl = "\n";
 
 if ( $browser_job ) {
@@ -35,6 +35,8 @@ if ( $browser_job ) {
     // Put something so the webservers don't buffer
     echo '<!-- some_empty_spaces: ' . str_repeat( ' ', 16 * 1024 ) . ' -->' . "$nl";
 }
+
+echo "Locating wp-cli ...$nl";
 
 // paths to wp-cli
 $wp_paths = [
@@ -61,7 +63,7 @@ if (!$found) {
 }
 
 // http://stackoverflow.com/questions/4870697/php-flush-that-works-even-in-nginx
-echo "wp cli info$nl";
+echo "wp cli found.$nl";
 
 if ( $browser_job ) {
     echo "<pre>";
@@ -73,17 +75,17 @@ if ( $browser_job ) {
     echo "</pre>";
 }
 
-echo $nl . $nl;
+echo $nl;
+echo "Getting all pages & posts ...$nl";
 
 // will return a list all post IDs separated by spaces
-$ids_str = `$wp post list --post_type=post --format=ids`;
+$ids_str = `$wp post list --post_type=post --format=ids`; //,page
 
 // Cleanup
 $ids_arr = preg_split('#\s+#si', $ids_str);
 $ids_arr = array_unique($ids_arr);
 $ids_arr = array_filter($ids_arr);
 sort($ids_arr);
-
 $cnt = count($ids_arr);
 
 echo "Found " . $cnt . " posts.$nl";
@@ -99,17 +101,25 @@ foreach ($ids_arr as $idx => $id) {
 
     if (!empty($featured_img_id)) {
         // http://example.com/wp-content/uploads/2017/01/????-?????-e1483549644521.jpg
-        $featured_img_url = `$wp post get $featured_img_id --field='guid'`;
+        $guid_esc = escapeshellarg( "guid" );
+        $featured_img_url = `$wp post get $featured_img_id --field=$guid_esc`;
         $featured_img_url = trim($featured_img_url);
 
-        if (!empty($featured_img_url) && preg_match('#(/wp-content/uploads/.*)#si', $featured_img_url, $matches)) {
+        if ( !empty($featured_img_url) 
+                && preg_match('#(/wp-content/uploads/.*)#si', $featured_img_url, $matches)) {
             if (!file_exists(__DIR__ . $matches[1])) {
-                echo "<div style='color:red'>";
+                if ( $browser_job ) {
+                    echo "<div style='color:red'>";
+                }
+                echo "Error:$nl";
                 echo "Missing thumbnail post [$id]$nl";
-                echo "Edt URL: <a href='/wp-admin/post.php?post=$id&action=edit'>/wp-admin/post.php?post=$id&action=edit</a>$nl";
+                echo "Edt URL: <a href='$prefix/wp-admin/post.php?post=$id&action=edit' target='_blank'>/wp-admin/post.php?post=$id&action=edit</a>$nl";
                 echo "File is missing: " . $matches[1] . "$nl";
                 echo "URL: " . $featured_img_url . "$nl";
-                echo "</div>";
+                
+                if ( $browser_job ) {
+                    echo "</div>";
+                }
             }
         }
     }
@@ -120,4 +130,5 @@ foreach ($ids_arr as $idx => $id) {
     }
 }
 
+echo "Done$nl";
 exit(0);
