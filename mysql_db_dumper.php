@@ -10,7 +10,9 @@
  * php "C:\Copy\Dropbox\cloud\projects\default\htdocs\github\orbisius-github-projects\server-tools\mysql_db_dumper.php" "root" "root_db_pass" C:\Copy\Dropbox\cloud\db_export\YYYY-MM\DAY_OF_WEEK\
  *
  * @author Svetoslav Marinov (Slavi) | orbisius.com
- * @copyright 2016
+ * @copyright 2016-2050
+ *
+ * @seehttps://dba.stackexchange.com/questions/20/how-can-i-optimize-a-mysqldump-of-a-large-database
  */
 $user = empty( $argv[1] ) ? 'root' : $argv[1];
 $pass = empty( $argv[2] ) ? '' : $argv[2];
@@ -77,7 +79,7 @@ foreach ( $db_names as $db_name ) {
 
     echo "Processing: [$db_name]\n";
     echo "mysql dump\n";
-    echo `$mysqldump --opt --user=$db_user_esc --password=$db_pass_esc --single-transaction --hex-blob --complete-insert --default-character-set=utf8 $db_name_esc > $db_name_sql_file 2>$db_name_log_file`;
+    echo `$mysqldump --opt --user=$db_user_esc --password=$db_pass_esc --single-transaction --hex-blob --routines --triggers --complete-insert --default-character-set=utf8 $db_name_esc > $db_name_sql_file 2>$db_name_log_file`;
 
     // If error log file exists but nothing is there don't keep it.
     if ( file_exists( $db_name_log_file )
